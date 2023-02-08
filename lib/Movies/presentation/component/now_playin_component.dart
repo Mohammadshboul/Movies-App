@@ -13,7 +13,9 @@ class NowPlayingComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MoviesBloc, MoviesState>(builder: (context, state) {
+    return BlocBuilder<MoviesBloc, MoviesState>(
+      buildWhen: (previous, current) =>previous.nowPlayingState!=current.nowPlayingState ,
+      builder: (context, state) {
       switch (state.nowPlayingState) {
         case RequestState.loading:
           return const SizedBox(
@@ -29,12 +31,11 @@ class NowPlayingComponent extends StatelessWidget {
               options: CarouselOptions(
                 height: 400.0,
                 viewportFraction: 1.0,
-                onPageChanged: (index, reason) {},
               ),
               items: state.nowPlayingMovies.map(
                 (item) {
                   return GestureDetector(
-                    key: const Key('openMovieMinimalDetail'),
+                    // key: const Key('openMovieMinimalDetail'),
                     onTap: () {},
                     child: Stack(
                       children: [
@@ -110,12 +111,10 @@ class NowPlayingComponent extends StatelessWidget {
             ),
           );
         case RequestState.error:
-          return const SizedBox(
+          return  SizedBox(
             height: 400,
             child: Center(
-              /// TODO Check This
-              child: Text("state.nowPlayingMessage"),
-              // ToDo
+              child: Text(state.nowPlayingMessage),
             ),
           );
       }
